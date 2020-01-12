@@ -4,4 +4,6 @@
 **/CMakeCache.txt
 **/*.cmake
 **/*.exe
+**/.vs
+**/Debug
 
