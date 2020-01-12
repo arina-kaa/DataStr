@@ -83,7 +83,6 @@ class Tree
             else
             {
                 vector<vector<string>> nodeGens;
-
                 for (const auto &child : node->childs)
                 {
                     nodeGens.push_back(child->gen);
@@ -91,6 +90,37 @@ class Tree
                 setNodeGens(nodeGens, 0, "", resultGen);
             }
             node->gen = resultGen;
+        }
+    }
+    void printTreeElements()
+    {
+        size_t c = 1;
+        for (const auto &gen : top->gen)
+        {
+            cout << " " << c++ << ")" << endl;
+            vector<shared_ptr<Node>> v;
+            for (const auto &ch : gen)
+            {
+                auto node = *find_if(nodes.begin(), nodes.end(), [=](const auto &node) {
+                    return node->value == string(1, ch);
+                });
+                do
+                {
+                    v.push_back(node);
+                    node = node->parent;
+                } while (node);
+            }
+            vector<shared_ptr<Node>> res;
+            copy_if(nodes.begin(), nodes.end(), back_inserter(res), [=](const auto &node) {
+                return find_if(v.begin(), v.end(), [=](const auto a) {
+                           return a->value == node->value;
+                       }) != v.end();
+            });
+            for (const auto r : res)
+            {
+                cout << "  " << string(r->level, '.') << " " << r->value << endl;
+            }
+            cout << endl;
         }
     }
 
@@ -147,36 +177,6 @@ class Tree
         cout << endl
              << "Count of elements: " << top->gen.size() << endl
              << endl;
-
-        size_t c = 1;
-        for (const auto &gen : top->gen)
-        {
-            cout << " " << c++ << ")" << endl;
-            vector<shared_ptr<Node>> bla;
-            for (const auto &ch : gen)
-            {
-                auto node = *find_if(nodes.cbegin(), nodes.cend(), [=](const auto &node) {
-                    return node->value == string(1, ch);
-                });
-                bla.push_back(node);
-                node = node->parent;
-                while (node)
-                {
-                    bla.push_back(node);
-                    node = node->parent;
-                }
-            }
-            vector<shared_ptr<Node>> res;
-            copy_if(nodes.cbegin(), nodes.cend(), back_inserter(res), [=](const auto &node) {
-                return find_if(bla.cbegin(), bla.cend(), [=](const auto a) {
-                           return a->value == node->value;
-                       }) != bla.cend();
-            });
-            for (const auto r : res)
-            {
-                cout << "  " << string(r->level, '.') << " " << r->value << endl;
-            }
-            cout << endl;
-        }
+        printTreeElements();
     }
 };

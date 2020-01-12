@@ -1,3 +1,11 @@
+/*
+Каравайцева Арина, ИПС
+
+   18. Имеется  И-ИЛИ   дерево,   соответствующее   некоторому
+множеству  конструкций.  Требуется выдать на экран в наглядном
+виде все элементы дерева (14).
+*/
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
@@ -73,7 +81,7 @@ void printTreeFromFile(string filePath)
     fileIn.close();
 }
 
-int main() // task 18
+int main()
 {
     bool shouldContinue = true;
     while (shouldContinue)
