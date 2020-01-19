@@ -15,54 +15,55 @@
 
 using namespace std;
 
-vector<pair<int, int>> getShortPaths(vector<vector<int>> roads, const int pointCount, const int capitalIndex)
+vector<pair<int, int>> getShortPaths(vector<vector<int>> roads, const int pointCount)
 {
 	vector<pair<int, int>> result(pointCount, pair<int, int>(INT_MAX, INT_MAX));
 	vector<pair<bool, bool>> isVisited(pointCount, pair<int, int>(false, false));
 
-	result[capitalIndex].first = 0;
+	result[0].first = 0;
 	int currentPoint = 0;
 	bool isChanged = true;
+	bool isFirst;
 
 	while (isChanged)
 	{
 		int minLength = INT_MAX;
-
 		for (int i = 0; i < pointCount; i++)
 		{
 			if (!isVisited[i].first && (result[i].first < minLength))
 			{
 				minLength = result[i].first;
 				currentPoint = i;
-				isVisited[currentPoint].first = true;
+				isFirst = true;
 			}
 
 			if (!isVisited[i].second && (result[i].second < minLength))
 			{
 				minLength = result[i].second;
 				currentPoint = i;
-				isVisited[currentPoint].second = true;
+				isFirst = false;
 			}
 		}
 
 		if (minLength == INT_MAX)
 			break;
 
+		if (isFirst)
+			isVisited[currentPoint].first = true;
+		else
+			isVisited[currentPoint].second = true;
+
 		isChanged = false;
 		for (int i = 0; i < pointCount; i++)
 		{
-			if (!roads[currentPoint][i])
+			if (!roads[currentPoint][i]) 
 			{
 				continue;
 			}
 
-			int pathLength = result[currentPoint].second + roads[currentPoint][i];
-			if (isVisited[currentPoint].first && !isVisited[currentPoint].second)
+			int pathLength;
+			if (isFirst && (!isVisited[i].first || !isVisited[i].second) && result[currentPoint].first != INT_MAX)
 			{
-				if (isVisited[i].first && isVisited[i].second && result[currentPoint].first == INT_MAX)
-				{
-					continue;
-				}
 				pathLength = result[currentPoint].first + roads[currentPoint][i];
 				if (pathLength < result[i].first)
 				{
@@ -76,13 +77,17 @@ vector<pair<int, int>> getShortPaths(vector<vector<int>> roads, const int pointC
 					isChanged = true;
 				}
 			}
-			else if (!isVisited[i].second && result[currentPoint].second != INT_MAX && (pathLength < result[i].second))
+			else if (!isVisited[i].second && result[currentPoint].second != INT_MAX)
 			{
-				result[i].second = pathLength;
-				isChanged = true;
+				pathLength = result[currentPoint].second + roads[currentPoint][i];
+				if (pathLength < result[i].second)
+				{
+					result[i].second = pathLength;
+					isChanged = true;
+				}
 			}
 
-			isChanged = isChanged || !isVisited[i].first || !isVisited[i].second;
+			isChanged = isChanged | !isVisited[i].first | !isVisited[i].second;
 		}
 	}
 	return result;
@@ -90,8 +95,8 @@ vector<pair<int, int>> getShortPaths(vector<vector<int>> roads, const int pointC
 
 int main()
 {
-	int pointCount, roadCount, capitalNumber;
-	cin >> pointCount >> roadCount >> capitalNumber;
+	int pointCount, roadCount;
+	cin >> pointCount >> roadCount;
 
 	vector<vector<int>> roads(pointCount);
 
@@ -107,15 +112,10 @@ int main()
 		roads[startPoint - 1][endPoint - 1] = roadLength;
 	}
 
-	vector<pair<int, int>> paths = getShortPaths(roads, pointCount, capitalNumber - 1);
+	vector<pair<int, int>> paths = getShortPaths(roads, pointCount);
 
-	for (int i = 1; i <= pointCount; i++)
+	for (int i = 2; i <= pointCount; i++)
 	{
-		if (capitalNumber != i)
-		{
-			cout << "From " + to_string(capitalNumber) + " to " + to_string(i) + ": " + (paths[i - 1].second != INT_MAX ? to_string(paths[i - 1].second) : "No path") << endl;
-		}
+		cout << "From capital (" + to_string(1) + ") to " + to_string(i) + ": " + (paths[i - 1].second != INT_MAX ? to_string(paths[i - 1].second) : "Empty") << endl;
 	}
-
-	return 0;
 }

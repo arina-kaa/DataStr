@@ -1,0 +1,5 @@
+From capital (1) to 2: 16
+From capital (1) to 3: 5
+From capital (1) to 4: 7
+From capital (1) to 5: 10
+From capital (1) to 6: 11
