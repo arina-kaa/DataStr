@@ -1,0 +1,3 @@
+Project Propeties -> Configuration Property -> C/C++ -> Code Generation
+Поле Runtime Library Multy-threaded /MT
+(По умолчанию стоит /DLL)
