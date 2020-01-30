@@ -26,18 +26,18 @@ void Print()
 std::pair<int, int> FindElement(int value)
 {
     bool flag = false;
-    int l = 0; // левая граница
-    int r = values.size() - 1; // правая граница
+    int l = 0;
+    int r = values.size() - 1;
     int mid;
 
-    while ((l <= r) && (flag != true)) {
-        mid = (l + r) / 2; // считываем срединный индекс отрезка [l, r]
+    while ((l <= r) && (!flag)) {
+        mid = (l + r) / 2;
 
         if (values[mid] == value) 
-            flag = true;  //проверяем ключ со серединным элементом
+            flag = true;
 
         if (values[mid] > value) 
-            r = mid - 1;  // проверяем, какую часть нужно отбросить
+            r = mid - 1;
         else 
             l = mid + 1;
     }
@@ -74,31 +74,37 @@ int main(int argc, char* argv[])
         values.push_back(value);
     }
     Print();
-    std::cout << values.size() << std::endl;
-
-    std::cout << "Select command:" << std::endl;
-    std::cout << "1 - find element" << std::endl;
-    std::cout << "2 - add element" << std::endl;
-    std::cout << "3 - delete element" << std::endl;
 
     int command;
-    std::cin >> command;
-    std::cin >> value;
-    switch (command)
+    do
     {
-    case 1:
-        std::cout << FindElement(value).first << std::endl;
-        break;
-    case 2:
-        AddElement(value);
-        break;
-    case 3:
-        DeleteElement(value);
-        break;
-    default:
-        break;
-    }
-    Print();
+        std::cout << "Select command:" << std::endl;
+        std::cout << "1 - find element" << std::endl;
+        std::cout << "2 - add element" << std::endl;
+        std::cout << "3 - delete element" << std::endl;
+        std::cout << "4 - exit" << std::endl;
+
+        std::cin >> command;
+        if (command != 4)
+        {
+            std::cin >> value;
+            switch (command)
+            {
+            case 1:
+                std::cout << FindElement(value).first << std::endl;
+                break;
+            case 2:
+                AddElement(value);
+                break;
+            case 3:
+                DeleteElement(value);
+                break;
+            default:
+                break;
+            }
+            Print();
+        }
+    } while (command != 4);
 
     return 0;
 }
